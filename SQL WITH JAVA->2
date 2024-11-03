@@ -1,0 +1,39 @@
+import java.sql.*; // importing sql package
+import javax.swing.JOptionPane;
+public class App {
+    public static String getDetails() {
+        String[] messages = {"Enter your id: ",
+                             "Enter your name: ",
+                            "Enter your age: "};
+        String[] results = new String[3];
+        String query = "insert into students values(";
+        for (int i = 0; i < messages.length; i++) {
+            results[i] = JOptionPane.showInputDialog(messages[i]);
+            query += results[i];
+        }
+        return query;
+    }
+    public static void main(String[] args) {
+        String dbName = JOptionPane.showInputDialog("Enter a db name: ");
+        String url = "jdbc:mysql://localhost:3306/" + dbName;
+        String username = "pavan";
+        String password = "your_password";
+        // Establishing the connection
+        try {
+            Connection con = DriverManager.getConnection(url, username, password);
+            if (con != null) JOptionPane.showMessageDialog(null, "Successfully Connnecd.");
+            // Create a statement
+            Statement st = con.createStatement();
+            // Run Query
+            getDetails();
+            String s1 = "4";
+            String s2 = "Lisbon";
+            String s3 = "17";
+            String query = "insert into students values("+s1+", " + s2 + ", " + s3 + ")";
+            st.executeUpdate(query);
+        }
+        catch(SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+}
