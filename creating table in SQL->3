@@ -1,0 +1,55 @@
+// Java application to create table in MySQL database from user inputs
+import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.JComboBox;
+public class App {
+    public static String getFieldDetails() {
+        String fieldName = JOptionPane.showInputDialog("Enter field name: ");
+        String[] items = {"int", "float", "varchar"};
+        JComboBox box = new JComboBox(items);
+        JOptionPane.showMessageDialog(null, box);
+        String fieldType = (String)box.getSelectedItem();
+        if (fieldType.equals("varchar")) {
+            String length = JOptionPane.showInputDialog("Enter maximum length of " + fieldName);
+            fieldType += "("+length+")";
+        }
+        JOptionPane.showMessageDialog(null, fieldName + "\n" + fieldType);
+        return fieldName + " " + fieldType;
+    }
+    public static String constructQuery(String tableName) {
+        String query = "create table " + tableName + "(";
+        while (true) {
+            int ch = JOptionPane.showConfirmDialog(null, "Do you want to add a field?", "Choose", JOptionPane.YES_NO_OPTION);
+            if (ch == 0) {
+                query += getFieldDetails() + ",";
+            }
+            else {
+                break;
+            }
+        }
+        char array[] = query.toCharArray();
+        array[query.length() - 1] = ')';
+        query = new String(array);
+        JOptionPane.showMessageDialog(null, query);
+        return query;
+    }
+    public static void main(String[] args) throws Exception {
+        String url = "jdbc:mysql://localhost:3306/your_database_name_here";
+        String username = "root";
+        String password = "your_password_here";
+        try {
+            Connection con = DriverManager.getConnection(url, username, password);
+            if (con != null) System.out.println("Connected Successfully");
+            Statement st = con.createStatement();
+            // executeUpate() is capable of handling insert, delete, update queries
+            // and also DDL commands (Like create and alter)
+            
+            String tableName = JOptionPane.showInputDialog("Enter a table name to be created: ");
+            String sqlQuery = constructQuery(tableName);
+            st.executeUpdate(sqlQuery);
+        }
+        catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+}
