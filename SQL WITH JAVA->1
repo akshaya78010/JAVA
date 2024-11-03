@@ -1,0 +1,16 @@
+import java.sql.*; // importing sql package
+public class App {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/pavandb3";
+        String username = "pavan";
+        String password = "your_password";
+        // Establishing the connection
+        try {
+            Connection con = DriverManager.getConnection(url, username, password);
+            if (con != null) System.out.println("Successfully Connnecd.");
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
